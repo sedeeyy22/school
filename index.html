@@ -3,94 +3,208 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>نظام تقديم الطلاب - مدرسة الفضيل ابن عياض</title>
+    <title>بوابة تقديم مدرسة الفضيل بن عياض</title>
     <style>
-        :root { --main-color: #0088cc; --secondary-color: #f1f1f1; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
-        .card { max-width: 500px; width: 90%; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--main-color); }
-        h2 { text-align: center; color: var(--main-color); margin-top: 0; }
-        label { display: block; margin-top: 15px; font-weight: bold; font-size: 14px; }
-        input, select, textarea { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 15px; }
-        textarea { resize: vertical; min-height: 100px; }
-        #general-reason-section { display: none; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 10px; border-right: 5px solid var(--main-color); }
-        .btn { width: 100%; background: var(--main-color); color: white; padding: 15px; border: none; border-radius: 10px; margin-top: 25px; cursor: pointer; font-size: 17px; font-weight: bold; transition: 0.3s; }
-        .btn:hover { background: #0077b3; transform: scale(1.02); }
-        .footer { text-align: center; font-size: 12px; color: #888; margin-top: 20px; }
+        /* إعدادات الألوان والفخامة */
+        :root {
+            --bg-color: #0f172a; /* كحلي غامق جداً */
+            --card-bg: rgba(30, 41, 59, 0.7); /* شفاف قليلاً */
+            --primary-accent: #38bdf8; /* أزرق سماوي مضيء */
+            --text-color: #f8fafc;
+            --input-bg: #1e293b;
+        }
+
+        body {
+            background: var(--bg-color);
+            background-image: radial-gradient(circle at top right, #1e293b, #0f172a);
+            color: var(--text-color);
+            font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow-x: hidden;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 480px;
+            padding: 40px;
+            background: var(--card-bg);
+            backdrop-filter: blur(10px); /* تأثير الزجاج الضبابي */
+            border-radius: 24px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        h2 {
+            text-align: center;
+            font-size: 28px;
+            font-weight: 800;
+            margin-bottom: 30px;
+            background: linear-gradient(to left, #38bdf8, #818cf8);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        label {
+            display: block;
+            margin-top: 20px;
+            font-size: 14px;
+            font-weight: 500;
+            color: #94a3b8;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 14px;
+            margin-top: 8px;
+            background: var(--input-bg);
+            border: 1px solid #334155;
+            border-radius: 12px;
+            color: white;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: var(--primary-accent);
+            box-shadow: 0 0 0 4px rgba(56, 189, 248, 0.2);
+            background: #1e293b;
+        }
+
+        #general-reason-section {
+            display: none;
+            margin-top: 15px;
+            padding: 15px;
+            background: rgba(56, 189, 248, 0.05);
+            border-radius: 12px;
+            border-right: 4px solid var(--primary-accent);
+        }
+
+        .btn {
+            width: 100%;
+            background: linear-gradient(135deg, #38bdf8 0%, #1d4ed8 100%);
+            color: white;
+            padding: 16px;
+            border: none;
+            border-radius: 12px;
+            margin-top: 30px;
+            cursor: pointer;
+            font-size: 18px;
+            font-weight: bold;
+            box-shadow: 0 10px 15px -3px rgba(56, 189, 248, 0.4);
+            transition: all 0.3s ease;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 20px 25px -5px rgba(56, 189, 248, 0.5);
+            filter: brightness(1.1);
+        }
+
+        .btn:active { transform: translateY(0); }
+
+        .btn:disabled {
+            background: #475569;
+            cursor: not-allowed;
+            box-shadow: none;
+        }
+
+        ::placeholder { color: #64748b; }
+
     </style>
 </head>
 <body>
 
-<div class="card">
-    <h2>تقديم طلب مدرسة الفضيل ابن عياض 📮</h2>
-    <form id="studentForm">
-        <label>اسم الطالب الكامل:</label>
-        <input type="text" id="studentName" placeholder="أدخل اسم الطالب الرباعي" required>
+<div class="container">
+    <h2>تقديم نقل طالب  🚀</h2>
+    <form id="proForm">
+        <label>اسم الطالب الكامل</label>
+        <input type="text" id="name" placeholder="أدخل الاسم الرباعي" required>
 
-        <label>الخطاب المرسل إلى مدير المدرسة:</label>
-        <textarea id="letterText" placeholder="اكتب نص الخطاب هنا..." required></textarea>
+        <label>الخطاب الموجه للإدارة</label>
+        <textarea id="msg" placeholder="اكتب نص الخطاب بوضوح..." required></textarea>
 
-        <label>نوع السبب:</label>
-        <select id="reasonType" onchange="checkReason()">
-            <option value="خاص">سبب خاص</option>
-            <option value="عام">سبب عام</option>
+        <label>تصنيف الطلب</label>
+        <select id="type" onchange="toggleStyle()">
+            <option value="خاص">سبب خاص (سري)</option>
+            <option value="عام">سبب عام (توضيحي)</option>
         </select>
 
         <div id="general-reason-section">
-            <label>اذكر السبب العام:</label>
-            <textarea id="generalReasonText" placeholder="اكتب تفاصيل السبب العام..."></textarea>
+            <label>تفاصيل السبب العام</label>
+            <textarea id="extra" placeholder="يرجى كتابة التفاصيل هنا..."></textarea>
         </div>
 
-        <button type="button" class="btn" id="sendBtn" onclick="sendData()">إرسال عبر تليجرام</button>
+        <button type="button" class="btn" id="submitBtn" onclick="handleSend()">إرسال الطلب الآن</button>
     </form>
-    <div class="footer">مرتبط ببوت: @adjwahjbot</div>
 </div>
 
 <script>
-    function checkReason() {
-        const type = document.getElementById('reasonType').value;
-        document.getElementById('general-reason-section').style.display = (type === 'عام') ? 'block' : 'none';
+    function toggleStyle() {
+        const section = document.getElementById('general-reason-section');
+        const type = document.getElementById('type').value;
+        if (type === 'عام') {
+            section.style.display = 'block';
+        } else {
+            section.style.display = 'none';
+        }
     }
 
-    async function sendData() {
-        const botToken = "8115945501:AAEyUmGoWhvv1mj9ohXCjazvNFREq1I_MgY";
-        const chatId = "5906998968"; // تأكد أن هذا الـ ID الخاص بك
-        
-        const name = document.getElementById('studentName').value;
-        const letter = document.getElementById('letterText').value;
-        const type = document.getElementById('reasonType').value;
-        const generalDetails = document.getElementById('generalReasonText').value;
-        const btn = document.getElementById('sendBtn');
+    async function handleSend() {
+        // --- ضع بياناتك هنا ---
+        const token = "8115945501:AAEyUmGoWhvv1mj9ohXCjazvNFREq1I_MgY";
+        const myId = "5906998968"; // <--- لا تنسى تضع ID الخاص بك
+        // ---------------------
 
-        if (!name || !letter) return alert("فضلاً عبي الخانات الأساسية!");
+        const name = document.getElementById('name').value;
+        const msg = document.getElementById('msg').value;
+        const type = document.getElementById('type').value;
+        const extra = document.getElementById('extra').value;
+        const btn = document.getElementById('submitBtn');
+
+        if(!name || !msg) {
+            alert("يرجى تعبئة الحقول المطلوبة!");
+            return;
+        }
 
         btn.disabled = true;
-        btn.innerText = "جاري الإرسال...";
+        btn.innerText = "جاري الاتصال بالسيرفر...";
 
-        let message = `🆕 *طلب تقديم مدرسة جديد*\n\n`;
-        message += `👤 *اسم الطالب:* ${name}\n`;
-        message += `📍 *نوع السبب:* ${type}\n`;
-        if(type === 'عام') message += `💡 *السبب:* ${generalDetails}\n`;
-        message += `\n✉️ *الخطاب:*\n${letter}`;
+        let message = `✨ *طلب تقديم جديد الفخامة*\n\n`;
+        message += `👤 *الاسم:* ${name}\n`;
+        message += `🏷️ *النوع:* ${type}\n`;
+        if(type === 'عام') message += `📝 *التفاصيل:* ${extra}\n`;
+        message += `\n📜 *الخطاب:*\n${msg}`;
 
         try {
-            const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
+            const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'Markdown' })
+                headers: {'Content-Type': 'application/json'},
+                body: JSON.stringify({chat_id: myId, text: message, parse_mode: 'Markdown'})
             });
 
-            if (res.ok) {
-                alert("تم إرسال طلبك بنجاح!");
-                document.getElementById('studentForm').reset();
-                checkReason();
+            if(r.ok) {
+                alert("✅ تم الإرسال بنجاح! سيصلك الرد قريباً.");
+                document.getElementById('proForm').reset();
+                toggleStyle();
             } else {
-                alert("خطأ! تأكد أنك فعلت البوت (ضغطت Start)");
+                alert("❌ فشل الإرسال. تأكد من الـ ID وضغط Start في البوت.");
             }
-        } catch (e) {
-            alert("فشل الاتصال بالخادم");
+        } catch(e) {
+            alert("⚠️ حدث خطأ في الشبكة.");
         } finally {
             btn.disabled = false;
-            btn.innerText = "إرسال عبر تليجرام";
+            btn.innerText = "إرسال الطلب الآن";
         }
     }
 </script>
