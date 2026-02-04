@@ -2,41 +2,77 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>بوابة التسجيل المدرسي</title>
+    <title>طلب تقديم مدرسة الفضيل ابن عياض</title>
     <style>
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f4f4f9; margin: 40px; }
-        .container { max-width: 600px; background: white; padding: 20px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0,0,0,0.1); margin: auto; }
-        h2 { color: #2c3e50; text-align: center; }
-        label { display: block; margin-top: 10px; font-weight: bold; }
-        input, select { width: 100%; padding: 10px; margin-top: 5px; border: 1px solid #ccc; border-radius: 5px; box-sizing: border-box; }
-        button { width: 100%; background-color: #27ae60; color: white; padding: 12px; border: none; border-radius: 5px; margin-top: 20px; cursor: pointer; font-size: 16px; }
+        :root { --primary-blue: #2c3e50; --success-green: #27ae60; }
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 20px; line-height: 1.6; }
+        .container { max-width: 600px; background: white; margin: 40px auto; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--primary-blue); border-bottom: 2px solid #eee; padding-bottom: 10px; }
+        
+        label { display: block; margin-top: 20px; font-weight: bold; color: #444; }
+        input, select, textarea { 
+            width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ccc; 
+            border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: #fdfdfd;
+        }
+        
+        textarea { resize: vertical; min-height: 100px; }
+        
+        /* إخفاء قسم السبب العام في البداية */
+        #general-reason-section { display: none; margin-top: 15px; padding: 15px; background: #f9f9f9; border-right: 4px solid var(--primary-blue); }
+        
+        button { 
+            width: 100%; background-color: var(--success-green); color: white; padding: 15px; 
+            border: none; border-radius: 8px; margin-top: 25px; cursor: pointer; font-size: 16px; font-weight: bold; 
+        }
         button:hover { background-color: #219150; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>نموذج تقديم طالب جديد</h2>
-    <form>
-        <label>اسم الطالب الرباعي:</label>
-        <input type="text" placeholder="أدخل الاسم هنا" required>
+    <h2>نموذج تقديم طلب</h2>
+    
+    <form id="schoolForm">
+        <label>اسم الطالب الكامل:</label>
+        <input type="text" placeholder="أدخل اسمك الثلاثي أو الرباعي" required>
 
-        <label>تاريخ الميلاد:</label>
-        <input type="date" required>
+        <label>الخطاب المرسل إلى مدير المدرسة:</label>
+        <textarea placeholder="اكتب نص الخطاب هنا..."></textarea>
 
-        <label>المرحلة الدراسية:</label>
-        <select>
-            <option>الابتدائية</option>
-            <option>المتوسطة</option>
-            <option>الثانوية</option>
+        <label>نوع السبب:</label>
+        <select id="reasonType" onchange="toggleReasonField()">
+            <option value="none" selected disabled>اختر نوع السبب...</option>
+            <option value="special">سبب خاص</option>
+            <option value="general">سبب عام</option>
         </select>
 
-        <label>رقم هاتف ولي الأمر:</label>
-        <input type="tel" placeholder="05xxxxxxxx" required>
+        <div id="general-reason-section">
+            <label>اذكر السبب العام بالتفصيل:</label>
+            <textarea id="generalReasonText" placeholder="اكتب تفاصيل السبب العام هنا..."></textarea>
+        </div>
 
-        <button type="button" onclick="alert('تم استلام طلبك بنجاح! سيتواصل معكم قسم القبول قريباً.')">إرسال الطلب</button>
+        <button type="submit">إرسال الطلب</button>
     </form>
 </div>
+
+<script>
+    function toggleReasonField() {
+        const reasonType = document.getElementById('reasonType').value;
+        const generalSection = document.getElementById('general-reason-section');
+        
+        if (reasonType === 'general') {
+            generalSection.style.display = 'block'; // إظهار الخانة
+        } else {
+            generalSection.style.display = 'none'; // إخفاء الخانة
+        }
+    }
+
+    // منع الصفحة من التحديث عند الضغط على إرسال (للعرض فقط)
+    document.getElementById('schoolForm').onsubmit = function(e) {
+        e.preventDefault();
+        alert('تم إرسال الطلب بنجاح للأستاذ!');
+    }
+</script>
 
 </body>
 </html>
