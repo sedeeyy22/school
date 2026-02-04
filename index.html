@@ -5,11 +5,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>بوابة تقديم مدرسة الفضيل بن عياض</title>
     <style>
-        /* إعدادات الألوان والفخامة */
         :root {
-            --bg-color: #0f172a; /* كحلي غامق جداً */
-            --card-bg: rgba(30, 41, 59, 0.7); /* شفاف قليلاً */
-            --primary-accent: #38bdf8; /* أزرق سماوي مضيء */
+            --bg-color: #0f172a; 
+            --card-bg: rgba(30, 41, 59, 0.7); 
+            --primary-accent: #38bdf8; 
             --text-color: #f8fafc;
             --input-bg: #1e293b;
         }
@@ -24,15 +23,16 @@
             justify-content: center;
             min-height: 100vh;
             margin: 0;
+            padding: 20px;
             overflow-x: hidden;
         }
 
         .container {
             width: 100%;
-            max-width: 480px;
+            max-width: 500px;
             padding: 40px;
             background: var(--card-bg);
-            backdrop-filter: blur(10px); /* تأثير الزجاج الضبابي */
+            backdrop-filter: blur(10px);
             border-radius: 24px;
             border: 1px solid rgba(255, 255, 255, 0.1);
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
@@ -52,6 +52,12 @@
             background: linear-gradient(to left, #38bdf8, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .grid-inputs {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
         }
 
         label {
@@ -111,25 +117,34 @@
             filter: brightness(1.1);
         }
 
-        .btn:active { transform: translateY(0); }
-
-        .btn:disabled {
-            background: #475569;
-            cursor: not-allowed;
-            box-shadow: none;
-        }
-
         ::placeholder { color: #64748b; }
-
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>تقديم نقل طالب  🚀</h2>
+    <h2>مدرسة الفضيل بن عياض 🏫</h2>
     <form id="proForm">
         <label>اسم الطالب الكامل</label>
         <input type="text" id="name" placeholder="أدخل الاسم الرباعي" required>
+
+        <div class="grid-inputs">
+            <div>
+                <label>الهوية الوطنية</label>
+                <input type="text" id="id_number" placeholder="رقم الهوية" required>
+            </div>
+            <div>
+                <label>الصف الدراسي</label>
+                <select id="grade">
+                    <option value="أول ثانوي">أول ثانوي</option>
+                    <option value="ثاني ثانوي">ثاني ثانوي</option>
+                    <option value="ثالث ثانوي">ثالث ثانوي</option>
+                </select>
+            </div>
+        </div>
+
+        <label>رقم هاتف ولي الأمر</label>
+        <input type="tel" id="phone" placeholder="05xxxxxxxx" required>
 
         <label>الخطاب الموجه للإدارة</label>
         <textarea id="msg" placeholder="اكتب نص الخطاب بوضوح..." required></textarea>
@@ -153,35 +168,35 @@
     function toggleStyle() {
         const section = document.getElementById('general-reason-section');
         const type = document.getElementById('type').value;
-        if (type === 'عام') {
-            section.style.display = 'block';
-        } else {
-            section.style.display = 'none';
-        }
+        section.style.display = (type === 'عام') ? 'block' : 'none';
     }
 
     async function handleSend() {
-        // --- ضع بياناتك هنا ---
         const token = "8115945501:AAEyUmGoWhvv1mj9ohXCjazvNFREq1I_MgY";
-        const myId = "5906998968"; // <--- لا تنسى تضع ID الخاص بك
-        // ---------------------
+        const myId = "5906998968"; 
 
         const name = document.getElementById('name').value;
+        const id_number = document.getElementById('id_number').value;
+        const grade = document.getElementById('grade').value;
+        const phone = document.getElementById('phone').value;
         const msg = document.getElementById('msg').value;
         const type = document.getElementById('type').value;
         const extra = document.getElementById('extra').value;
         const btn = document.getElementById('submitBtn');
 
-        if(!name || !msg) {
-            alert("يرجى تعبئة الحقول المطلوبة!");
+        if(!name || !id_number || !phone || !msg) {
+            alert("يرجى تعبئة كافة الحقول الأساسية!");
             return;
         }
 
         btn.disabled = true;
-        btn.innerText = "جاري الاتصال بالسيرفر...";
+        btn.innerText = "جاري الإرسال...";
 
-        let message = `✨ *طلب تقديم جديد الفخامة*\n\n`;
+        let message = `✨ *طلب تقديم جديد - مدرسة الفضيل*\n\n`;
         message += `👤 *الاسم:* ${name}\n`;
+        message += `🆔 *الهوية:* ${id_number}\n`;
+        message += `📚 *الصف:* ${grade}\n`;
+        message += `📞 *الهاتف:* ${phone}\n`;
         message += `🏷️ *النوع:* ${type}\n`;
         if(type === 'عام') message += `📝 *التفاصيل:* ${extra}\n`;
         message += `\n📜 *الخطاب:*\n${msg}`;
@@ -194,14 +209,14 @@
             });
 
             if(r.ok) {
-                alert("✅ تم الإرسال بنجاح! سيصلك الرد قريباً.");
+                alert("✅ تم الإرسال بنجاح!");
                 document.getElementById('proForm').reset();
                 toggleStyle();
             } else {
-                alert("❌ فشل الإرسال. تأكد من الـ ID وضغط Start في البوت.");
+                alert("❌ فشل الإرسال.");
             }
         } catch(e) {
-            alert("⚠️ حدث خطأ في الشبكة.");
+            alert("⚠️ خطأ في الاتصال.");
         } finally {
             btn.disabled = false;
             btn.innerText = "إرسال الطلب الآن";
