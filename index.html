@@ -2,37 +2,38 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>تقديم طلب - واتساب</title>
+    <title>بوابة التقديم الإلكتروني</title>
     <style>
-        :root { --wa-color: #25D366; --dark-blue: #075E54; }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #e5ddd5; padding: 20px; }
-        .container { max-width: 500px; background: white; margin: 30px auto; padding: 25px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: var(--dark-blue); }
-        label { display: block; margin-top: 15px; font-weight: bold; }
+        :root { --tg-color: #0088cc; --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-gradient); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; margin: 0; }
+        .container { max-width: 500px; width: 100%; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--tg-color); margin-bottom: 25px; }
+        label { display: block; margin-top: 15px; font-weight: bold; color: #555; }
         input, select, textarea { 
-            width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; 
-            border-radius: 8px; box-sizing: border-box; font-size: 15px;
+            width: 100%; padding: 12px; margin-top: 8px; border: 2px solid #eee; 
+            border-radius: 10px; box-sizing: border-box; font-size: 15px; transition: 0.3s;
         }
-        #general-reason-section { display: none; margin-top: 15px; }
-        .btn-whatsapp { 
-            width: 100%; background-color: var(--wa-color); color: white; padding: 15px; 
-            border: none; border-radius: 8px; margin-top: 25px; cursor: pointer; 
-            font-size: 17px; font-weight: bold; display: flex; align-items: center; justify-content: center;
+        input:focus, textarea:focus { border-color: var(--tg-color); outline: none; }
+        #general-reason-section { display: none; transition: 0.5s; }
+        button { 
+            width: 100%; background-color: var(--tg-color); color: white; padding: 15px; 
+            border: none; border-radius: 10px; margin-top: 25px; cursor: pointer; 
+            font-size: 17px; font-weight: bold; transition: 0.3s;
         }
-        .btn-whatsapp:hover { background-color: #128C7E; }
+        button:hover { background-color: #0077b3; transform: translateY(-2px); }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>إرسال طلب للمدرسة 📝</h2>
+    <h2>تقديم طلب جديد 📮</h2>
     
-    <form id="whatsappForm">
+    <form id="tgForm">
         <label>اسم الطالب الكامل:</label>
-        <input type="text" id="studentName" placeholder="أدخل الاسم" required>
+        <input type="text" id="studentName" placeholder="اكتب الاسم هنا..." required>
 
         <label>الخطاب المرسل إلى مدير المدرسة:</label>
-        <textarea id="letterText" placeholder="اكتب نص الخطاب هنا..." required></textarea>
+        <textarea id="letterText" placeholder="اكتب نص الخطاب..." required></textarea>
 
         <label>نوع السبب:</label>
         <select id="reasonType" onchange="toggleReasonField()">
@@ -42,12 +43,10 @@
 
         <div id="general-reason-section">
             <label>تفاصيل السبب العام:</label>
-            <textarea id="generalReasonText" placeholder="اشرح السبب العام..."></textarea>
+            <textarea id="generalReasonText" placeholder="اشرح تفاصيل السبب العام..."></textarea>
         </div>
 
-        <button type="button" class="btn-whatsapp" onclick="sendToWhatsApp()">
-            إرسال عبر واتساب 💬
-        </button>
+        <button type="button" id="submitBtn" onclick="sendToTelegram()">إرسال الطلب الآن</button>
     </form>
 </div>
 
@@ -58,34 +57,54 @@
         section.style.display = (type === 'عام') ? 'block' : 'none';
     }
 
-    function sendToWhatsApp() {
-        // 1. جمع البيانات من الخانات
+    async function sendToTelegram() {
+        // --- البيانات البرمجية ---
+        const botToken = "8115945501:AAEyUmGoWhvv1mj9ohXCjazvNFREq1I_MgY"; 
+        const chatId = "5091218558"; // تأكد من أن هذا الـ ID الخاص بك (تستطيع الحصول عليه من @userinfobot)
+        // -------------------------
+
         const name = document.getElementById('studentName').value;
         const letter = document.getElementById('letterText').value;
         const type = document.getElementById('reasonType').value;
         const generalDetails = document.getElementById('generalReasonText').value;
-        const phoneNumber = "966548873386"; // الرقم بصيغة دولية بدون +
+        const btn = document.getElementById('submitBtn');
 
-        // 2. التحقق من تعبئة البيانات الأساسية
         if (!name || !letter) {
-            alert("يرجى تعبئة الاسم والخطاب أولاً");
+            alert("يرجى إكمال البيانات الأساسية!");
             return;
         }
 
-        // 3. تجهيز نص الرسالة
-        let message = `*طلب تقديم مدرسة جديدة*%0a%0a`;
-        message += `*اسم الطالب:* ${name}%0a`;
-        message += `*نوع السبب:* ${type}%0a`;
+        btn.innerText = "جاري الإرسال...";
+        btn.disabled = true;
+
+        let text = `🔔 *طلب تقديم جديد من الموقع*\n\n`;
+        text += `👤 *الاسم:* ${name}\n`;
+        text += `📝 *النوع:* ${type}\n`;
+        if(type === 'عام') text += `ℹ️ *تفاصيل السبب:* ${generalDetails}\n`;
+        text += `\n✉️ *الخطاب:*\n${letter}`;
+
+        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
         
-        if (type === 'عام' && generalDetails) {
-            message += `*تفاصيل السبب:* ${generalDetails}%0a`;
+        try {
+            const response = await fetch(url, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'Markdown' })
+            });
+
+            if (response.ok) {
+                alert("تم إرسال طلبك بنجاح!");
+                document.getElementById('tgForm').reset();
+                toggleReasonField();
+            } else {
+                alert("حدث خطأ في الإرسال. تأكد من أنك ضغطت Start في البوت.");
+            }
+        } catch (error) {
+            alert("تعذر الاتصال بالخادم.");
+        } finally {
+            btn.innerText = "إرسال الطلب الآن";
+            btn.disabled = false;
         }
-
-        message += `%0a*الخطاب:*%0a${letter}`;
-
-        // 4. فتح رابط واتساب
-        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
-        window.open(whatsappUrl, '_blank');
     }
 </script>
 
