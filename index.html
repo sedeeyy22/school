@@ -48,10 +48,18 @@
             text-align: center;
             font-size: 28px;
             font-weight: 800;
-            margin-bottom: 30px;
+            margin-bottom: 5px;
             background: linear-gradient(to left, #38bdf8, #818cf8);
             -webkit-background-clip: text;
             -webkit-text-fill-color: transparent;
+        }
+
+        .student-name {
+            text-align: center;
+            font-size: 14px;
+            color: #94a3b8;
+            margin-bottom: 30px;
+            letter-spacing: 0.5px;
         }
 
         .grid-inputs {
@@ -113,7 +121,6 @@
 
         .btn:hover {
             transform: translateY(-2px);
-            box-shadow: 0 20px 25px -5px rgba(56, 189, 248, 0.5);
             filter: brightness(1.1);
         }
 
@@ -124,6 +131,8 @@
 
 <div class="container">
     <h2>مدرسة الفضيل بن عياض 🏫</h2>
+    <div class="student-name">صنع الطالب: سعود عابد العتيبي</div>
+    
     <form id="proForm">
         <label>اسم الطالب الكامل</label>
         <input type="text" id="name" placeholder="أدخل الاسم الرباعي" required>
@@ -136,9 +145,12 @@
             <div>
                 <label>الصف الدراسي</label>
                 <select id="grade">
-                    <option value="أول ثانوي">أول ثانوي</option>
-                    <option value="ثاني ثانوي">ثاني ثانوي</option>
-                    <option value="ثالث ثانوي">ثالث ثانوي</option>
+                    <option value="أول ابتدائي">أول ابتدائي</option>
+                    <option value="ثاني ابتدائي">ثاني ابتدائي</option>
+                    <option value="ثالث ابتدائي">ثالث ابتدائي</option>
+                    <option value="رابع ابتدائي">رابع ابتدائي</option>
+                    <option value="خامس ابتدائي">خامس ابتدائي</option>
+                    <option value="سادس ابتدائي">سادس ابتدائي</option>
                 </select>
             </div>
         </div>
@@ -200,6 +212,7 @@
         message += `🏷️ *النوع:* ${type}\n`;
         if(type === 'عام') message += `📝 *التفاصيل:* ${extra}\n`;
         message += `\n📜 *الخطاب:*\n${msg}`;
+        message += `\n\n👨‍💻 *بواسطة المبرمج:* سعود عابد العتيبي`;
 
         try {
             const r = await fetch(`https://api.telegram.org/bot${token}/sendMessage`, {
@@ -209,11 +222,11 @@
             });
 
             if(r.ok) {
-                alert("✅ تم الإرسال بنجاح!");
+                alert("✅ تم الإرسال بنجاح يا سعود!");
                 document.getElementById('proForm').reset();
                 toggleStyle();
             } else {
-                alert("❌ فشل الإرسال.");
+                alert("❌ فشل الإرسال. تأكد من الـ ID.");
             }
         } catch(e) {
             alert("⚠️ خطأ في الاتصال.");
