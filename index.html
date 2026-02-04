@@ -2,75 +2,90 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>طلب تقديم مدرسي</title>
+    <title>تقديم طلب - واتساب</title>
     <style>
-        :root { --primary-blue: #2c3e50; --success-green: #27ae60; }
-        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #f0f2f5; padding: 20px; line-height: 1.6; }
-        .container { max-width: 600px; background: white; margin: 40px auto; padding: 30px; border-radius: 12px; box-shadow: 0 5px 15px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: var(--primary-blue); border-bottom: 2px solid #eee; padding-bottom: 10px; }
-        
-        label { display: block; margin-top: 20px; font-weight: bold; color: #444; }
+        :root { --wa-color: #25D366; --dark-blue: #075E54; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background-color: #e5ddd5; padding: 20px; }
+        .container { max-width: 500px; background: white; margin: 30px auto; padding: 25px; border-radius: 15px; box-shadow: 0 10px 20px rgba(0,0,0,0.1); }
+        h2 { text-align: center; color: var(--dark-blue); }
+        label { display: block; margin-top: 15px; font-weight: bold; }
         input, select, textarea { 
-            width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ccc; 
-            border-radius: 8px; box-sizing: border-box; font-size: 14px; background-color: #fdfdfd;
+            width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; 
+            border-radius: 8px; box-sizing: border-box; font-size: 15px;
         }
-        
-        textarea { resize: vertical; min-height: 100px; }
-        
-        /* إخفاء قسم السبب العام في البداية */
-        #general-reason-section { display: none; margin-top: 15px; padding: 15px; background: #f9f9f9; border-right: 4px solid var(--primary-blue); }
-        
-        button { 
-            width: 100%; background-color: var(--success-green); color: white; padding: 15px; 
-            border: none; border-radius: 8px; margin-top: 25px; cursor: pointer; font-size: 16px; font-weight: bold; 
+        #general-reason-section { display: none; margin-top: 15px; }
+        .btn-whatsapp { 
+            width: 100%; background-color: var(--wa-color); color: white; padding: 15px; 
+            border: none; border-radius: 8px; margin-top: 25px; cursor: pointer; 
+            font-size: 17px; font-weight: bold; display: flex; align-items: center; justify-content: center;
         }
-        button:hover { background-color: #219150; }
+        .btn-whatsapp:hover { background-color: #128C7E; }
     </style>
 </head>
 <body>
 
 <div class="container">
-    <h2>نموذج تقديم طلب</h2>
+    <h2>إرسال طلب للمدرسة 📝</h2>
     
-    <form id="schoolForm">
+    <form id="whatsappForm">
         <label>اسم الطالب الكامل:</label>
-        <input type="text" placeholder="أدخل اسمك الثلاثي أو الرباعي" required>
+        <input type="text" id="studentName" placeholder="أدخل الاسم" required>
 
         <label>الخطاب المرسل إلى مدير المدرسة:</label>
-        <textarea placeholder="اكتب نص الخطاب هنا..."></textarea>
+        <textarea id="letterText" placeholder="اكتب نص الخطاب هنا..." required></textarea>
 
         <label>نوع السبب:</label>
         <select id="reasonType" onchange="toggleReasonField()">
-            <option value="none" selected disabled>اختر نوع السبب...</option>
-            <option value="special">سبب خاص</option>
-            <option value="general">سبب عام</option>
+            <option value="خاص">سبب خاص</option>
+            <option value="عام">سبب عام</option>
         </select>
 
         <div id="general-reason-section">
-            <label>اذكر السبب العام بالتفصيل:</label>
-            <textarea id="generalReasonText" placeholder="اكتب تفاصيل السبب العام هنا..."></textarea>
+            <label>تفاصيل السبب العام:</label>
+            <textarea id="generalReasonText" placeholder="اشرح السبب العام..."></textarea>
         </div>
 
-        <button type="submit">إرسال الطلب</button>
+        <button type="button" class="btn-whatsapp" onclick="sendToWhatsApp()">
+            إرسال عبر واتساب 💬
+        </button>
     </form>
 </div>
 
 <script>
     function toggleReasonField() {
-        const reasonType = document.getElementById('reasonType').value;
-        const generalSection = document.getElementById('general-reason-section');
-        
-        if (reasonType === 'general') {
-            generalSection.style.display = 'block'; // إظهار الخانة
-        } else {
-            generalSection.style.display = 'none'; // إخفاء الخانة
-        }
+        const type = document.getElementById('reasonType').value;
+        const section = document.getElementById('general-reason-section');
+        section.style.display = (type === 'عام') ? 'block' : 'none';
     }
 
-    // منع الصفحة من التحديث عند الضغط على إرسال (للعرض فقط)
-    document.getElementById('schoolForm').onsubmit = function(e) {
-        e.preventDefault();
-        alert('تم إرسال الطلب بنجاح للأستاذ!');
+    function sendToWhatsApp() {
+        // 1. جمع البيانات من الخانات
+        const name = document.getElementById('studentName').value;
+        const letter = document.getElementById('letterText').value;
+        const type = document.getElementById('reasonType').value;
+        const generalDetails = document.getElementById('generalReasonText').value;
+        const phoneNumber = "966548873386"; // الرقم بصيغة دولية بدون +
+
+        // 2. التحقق من تعبئة البيانات الأساسية
+        if (!name || !letter) {
+            alert("يرجى تعبئة الاسم والخطاب أولاً");
+            return;
+        }
+
+        // 3. تجهيز نص الرسالة
+        let message = `*طلب تقديم مدرسة جديدة*%0a%0a`;
+        message += `*اسم الطالب:* ${name}%0a`;
+        message += `*نوع السبب:* ${type}%0a`;
+        
+        if (type === 'عام' && generalDetails) {
+            message += `*تفاصيل السبب:* ${generalDetails}%0a`;
+        }
+
+        message += `%0a*الخطاب:*%0a${letter}`;
+
+        // 4. فتح رابط واتساب
+        const whatsappUrl = `https://wa.me/${phoneNumber}?text=${message}`;
+        window.open(whatsappUrl, '_blank');
     }
 </script>
 
