@@ -2,108 +2,95 @@
 <html lang="ar" dir="rtl">
 <head>
     <meta charset="UTF-8">
-    <title>بوابة التقديم الإلكتروني</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>نظام تقديم الطلاب - مدرسة</title>
     <style>
-        :root { --tg-color: #0088cc; --bg-gradient: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); }
-        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: var(--bg-gradient); min-height: 100vh; display: flex; align-items: center; justify-content: center; padding: 20px; margin: 0; }
-        .container { max-width: 500px; width: 100%; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 15px 35px rgba(0,0,0,0.1); }
-        h2 { text-align: center; color: var(--tg-color); margin-bottom: 25px; }
-        label { display: block; margin-top: 15px; font-weight: bold; color: #555; }
-        input, select, textarea { 
-            width: 100%; padding: 12px; margin-top: 8px; border: 2px solid #eee; 
-            border-radius: 10px; box-sizing: border-box; font-size: 15px; transition: 0.3s;
-        }
-        input:focus, textarea:focus { border-color: var(--tg-color); outline: none; }
-        #general-reason-section { display: none; transition: 0.5s; }
-        button { 
-            width: 100%; background-color: var(--tg-color); color: white; padding: 15px; 
-            border: none; border-radius: 10px; margin-top: 25px; cursor: pointer; 
-            font-size: 17px; font-weight: bold; transition: 0.3s;
-        }
-        button:hover { background-color: #0077b3; transform: translateY(-2px); }
+        :root { --main-color: #0088cc; --secondary-color: #f1f1f1; }
+        body { font-family: 'Segoe UI', Tahoma, sans-serif; background: #f0f2f5; display: flex; align-items: center; justify-content: center; min-height: 100vh; margin: 0; }
+        .card { max-width: 500px; width: 90%; background: white; padding: 30px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,0,0,0.1); border-top: 10px solid var(--main-color); }
+        h2 { text-align: center; color: var(--main-color); margin-top: 0; }
+        label { display: block; margin-top: 15px; font-weight: bold; font-size: 14px; }
+        input, select, textarea { width: 100%; padding: 12px; margin-top: 8px; border: 1px solid #ddd; border-radius: 10px; box-sizing: border-box; font-size: 15px; }
+        textarea { resize: vertical; min-height: 100px; }
+        #general-reason-section { display: none; background: #f9f9f9; padding: 15px; border-radius: 10px; margin-top: 10px; border-right: 5px solid var(--main-color); }
+        .btn { width: 100%; background: var(--main-color); color: white; padding: 15px; border: none; border-radius: 10px; margin-top: 25px; cursor: pointer; font-size: 17px; font-weight: bold; transition: 0.3s; }
+        .btn:hover { background: #0077b3; transform: scale(1.02); }
+        .footer { text-align: center; font-size: 12px; color: #888; margin-top: 20px; }
     </style>
 </head>
 <body>
 
-<div class="container">
-    <h2>تقديم طلب جديد 📮</h2>
-    
-    <form id="tgForm">
+<div class="card">
+    <h2>تقديم طلب إلكتروني 📮</h2>
+    <form id="studentForm">
         <label>اسم الطالب الكامل:</label>
-        <input type="text" id="studentName" placeholder="اكتب الاسم هنا..." required>
+        <input type="text" id="studentName" placeholder="أدخل اسم الطالب الرباعي" required>
 
         <label>الخطاب المرسل إلى مدير المدرسة:</label>
-        <textarea id="letterText" placeholder="اكتب نص الخطاب..." required></textarea>
+        <textarea id="letterText" placeholder="اكتب نص الخطاب هنا..." required></textarea>
 
         <label>نوع السبب:</label>
-        <select id="reasonType" onchange="toggleReasonField()">
+        <select id="reasonType" onchange="checkReason()">
             <option value="خاص">سبب خاص</option>
             <option value="عام">سبب عام</option>
         </select>
 
         <div id="general-reason-section">
-            <label>تفاصيل السبب العام:</label>
-            <textarea id="generalReasonText" placeholder="اشرح تفاصيل السبب العام..."></textarea>
+            <label>اذكر السبب العام:</label>
+            <textarea id="generalReasonText" placeholder="اكتب تفاصيل السبب العام..."></textarea>
         </div>
 
-        <button type="button" id="submitBtn" onclick="sendToTelegram()">إرسال الطلب الآن</button>
+        <button type="button" class="btn" id="sendBtn" onclick="sendData()">إرسال عبر تليجرام</button>
     </form>
+    <div class="footer">مرتبط ببوت: @adjwahjbot</div>
 </div>
 
 <script>
-    function toggleReasonField() {
+    function checkReason() {
         const type = document.getElementById('reasonType').value;
-        const section = document.getElementById('general-reason-section');
-        section.style.display = (type === 'عام') ? 'block' : 'none';
+        document.getElementById('general-reason-section').style.display = (type === 'عام') ? 'block' : 'none';
     }
 
-    async function sendToTelegram() {
-        // --- البيانات البرمجية ---
-        const botToken = "8115945501:AAEyUmGoWhvv1mj9ohXCjazvNFREq1I_MgY"; 
-        const chatId = "5091218558"; // تأكد من أن هذا الـ ID الخاص بك (تستطيع الحصول عليه من @userinfobot)
-        // -------------------------
-
+    async function sendData() {
+        const botToken = "8115945501:AAEyUmGoWhvv1mj9ohXCjazvNFREq1I_MgY";
+        const chatId = "@adjwahjbot"; // تأكد أن هذا الـ ID الخاص بك
+        
         const name = document.getElementById('studentName').value;
         const letter = document.getElementById('letterText').value;
         const type = document.getElementById('reasonType').value;
         const generalDetails = document.getElementById('generalReasonText').value;
-        const btn = document.getElementById('submitBtn');
+        const btn = document.getElementById('sendBtn');
 
-        if (!name || !letter) {
-            alert("يرجى إكمال البيانات الأساسية!");
-            return;
-        }
+        if (!name || !letter) return alert("فضلاً عبي الخانات الأساسية!");
 
-        btn.innerText = "جاري الإرسال...";
         btn.disabled = true;
+        btn.innerText = "جاري الإرسال...";
 
-        let text = `🔔 *طلب تقديم جديد من الموقع*\n\n`;
-        text += `👤 *الاسم:* ${name}\n`;
-        text += `📝 *النوع:* ${type}\n`;
-        if(type === 'عام') text += `ℹ️ *تفاصيل السبب:* ${generalDetails}\n`;
-        text += `\n✉️ *الخطاب:*\n${letter}`;
+        let message = `🆕 *طلب تقديم مدرسة جديد*\n\n`;
+        message += `👤 *اسم الطالب:* ${name}\n`;
+        message += `📍 *نوع السبب:* ${type}\n`;
+        if(type === 'عام') message += `💡 *السبب:* ${generalDetails}\n`;
+        message += `\n✉️ *الخطاب:*\n${letter}`;
 
-        const url = `https://api.telegram.org/bot${botToken}/sendMessage`;
-        
         try {
-            const response = await fetch(url, {
+            const res = await fetch(`https://api.telegram.org/bot${botToken}/sendMessage`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify({ chat_id: chatId, text: text, parse_mode: 'Markdown' })
+                body: JSON.stringify({ chat_id: chatId, text: message, parse_mode: 'Markdown' })
             });
 
-            if (response.ok) {
+            if (res.ok) {
                 alert("تم إرسال طلبك بنجاح!");
-                document.getElementById('tgForm').reset();
-                toggleReasonField();
+                document.getElementById('studentForm').reset();
+                checkReason();
             } else {
-                alert("حدث خطأ في الإرسال. تأكد من أنك ضغطت Start في البوت.");
+                alert("خطأ! تأكد أنك فعلت البوت (ضغطت Start)");
             }
-        } catch (error) {
-            alert("تعذر الاتصال بالخادم.");
+        } catch (e) {
+            alert("فشل الاتصال بالخادم");
         } finally {
-            btn.innerText = "إرسال الطلب الآن";
             btn.disabled = false;
+            btn.innerText = "إرسال عبر تليجرام";
         }
     }
 </script>
